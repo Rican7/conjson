@@ -32,12 +32,10 @@ func ConventionalKeys() Transformer {
 			data,
 			func(match []byte) []byte {
 				if Unmarshal == direction {
-					return bytes.ToUpper(
-						snakeCaseWordBarrierRegex.ReplaceAll(
-							match,
-							[]byte("${1}"),
-						),
-					)
+					return snakeCaseWordBarrierRegex.ReplaceAllFunc(match, func(match []byte) []byte {
+						// Remove the first byte (the underscore) from the match, and capitalize the rest
+						return bytes.ToUpper(match[1:])
+					})
 				}
 
 				return bytes.ToLower(
