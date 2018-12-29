@@ -20,9 +20,9 @@ const (
 )
 
 var (
-	keyMatchRegex             = regexp.MustCompile(`\"(\w+)\":`)
-	camelCaseWordBarrierRegex = regexp.MustCompile(`([a-z])([A-Z])`)
-	snakeCaseWordBarrierRegex = regexp.MustCompile(`_(\w)`)
+	keyMatchRegex             = regexp.MustCompile(`\"(.+?)\"\s*?:`)
+	camelCaseWordBarrierRegex = regexp.MustCompile(`(.)([A-Z])`)
+	snakeCaseWordBarrierRegex = regexp.MustCompile(`_(.)`)
 )
 
 // ConventionalKeys TODO
