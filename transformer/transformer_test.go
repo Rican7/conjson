@@ -15,7 +15,9 @@ func TestConventionalKeys(t *testing.T) {
 		"image_url": "https://example.com/image.png",
 		"time_to_live": 600,
 		"$weird_key" : "with-colon-spacing-before-value",
-		"plan9_key" : "just an example with a numeral"
+		"plan9_key" : "just an example with a numeral",
+		"__metadata_key": "You see this in OData 2.0",
+		"__metadata": "You see this in OData 2.0"
 	}
 	`
 
@@ -29,7 +31,9 @@ func TestConventionalKeys(t *testing.T) {
 		"imageUrl": "https://example.com/image.png",
 		"timeToLive": 600,
 		"$weirdKey" : "with-colon-spacing-before-value",
-		"plan9Key" : "just an example with a numeral"
+		"plan9Key" : "just an example with a numeral",
+		"__metadataKey": "You see this in OData 2.0",
+		"__metadata": "You see this in OData 2.0"
 	}
 	`
 
@@ -37,10 +41,10 @@ func TestConventionalKeys(t *testing.T) {
 	var trans Transformer = ConventionalKeys()
 
 	if output := trans([]byte(camelCaseJSON), Marshal); string(output) != snakeCaseJSON {
-		t.Errorf("Marshal output of %q doesn't match expected %q", output, snakeCaseJSON)
+		t.Errorf("Marshal output of %s doesn't match expected %s", output, snakeCaseJSON)
 	}
 
 	if output := trans([]byte(snakeCaseJSON), Unmarshal); string(output) != camelCaseJSON {
-		t.Errorf("Unmarshal output of %q doesn't match expected %q", output, camelCaseJSON)
+		t.Errorf("Unmarshal output of %s doesn't match expected %s", output, camelCaseJSON)
 	}
 }
