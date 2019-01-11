@@ -3,6 +3,7 @@ package transformer
 import (
 	"bytes"
 	"regexp"
+	"unicode"
 )
 
 // Direction TODO
@@ -25,6 +26,16 @@ var (
 	snakeCaseWordBarrierRegex = regexp.MustCompile(`(?:[^_])_(.)`)
 )
 
+// String satisfies the fmt.Stringer interface to provide a human-readable name
+// for a Direction value
+func (d Direction) String() string {
+	if Marshal == d {
+		return "Marshal"
+	}
+
+	return "Unmarshal"
+}
+
 // ConventionalKeys TODO
 func ConventionalKeys() Transformer {
 	return func(data []byte, direction Direction) []byte {
@@ -44,6 +55,28 @@ func ConventionalKeys() Transformer {
 						[]byte("${1}_${2}"),
 					),
 				)
+			},
+		)
+	}
+}
+
+// ValidIdentifierKeys TODO
+//
+// https://golang.org/ref/spec#Identifiers
+func ValidIdentifierKeys() Transformer {
+	return func(data []byte, direction Direction) []byte {
+		return replaceKeys(
+			data,
+			func(key []byte) []byte {
+				key = bytes.TrimLeftFunc(key, func(r rune) bool {
+					return !unicode.IsLetter(r)
+				})
+
+				fields := bytes.FieldsFunc(key, func(r rune) bool {
+					return !unicode.In(r, unicode.Letter, unicode.Digit)
+				})
+
+				return bytes.Join(fields, nil)
 			},
 		)
 	}
