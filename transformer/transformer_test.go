@@ -66,6 +66,65 @@ func TestConventionalKeys(t *testing.T) {
 	}
 }
 
+func TestCamelCaseKeys(t *testing.T) {
+	const originalJSON = `
+	{
+		"title": "Example Title",
+		"description": "whatever",
+		"created_at": "2015-11-17T20:43:31.0463576-05:00",
+		"updated_at": "2018-12-24T13:21:15.7883416-07:00",
+		"is_active": true,
+		"image_url": "https://example.com/image.png",
+		"time_to_live": 600,
+		"$weird_key" : "with-colon-spacing-before-value",
+		"plan9_key" : "just an example with a numeral",
+		"__metadata_key": "You see this in OData 2.0",
+		"__metadata": "You see this in OData 2.0",
+		"Capitalized": "a capitalized key",
+		"a-hyphenated-key": "a hyphenated key",
+		"camelCaseKey": "a camelCase key",
+		"UpperCamelCaseKey": "an UpperCamelCase key"
+	}
+	`
+
+	const camelCaseJSON = `
+	{
+		"title": "Example Title",
+		"description": "whatever",
+		"createdAt": "2015-11-17T20:43:31.0463576-05:00",
+		"updatedAt": "2018-12-24T13:21:15.7883416-07:00",
+		"isActive": true,
+		"imageUrl": "https://example.com/image.png",
+		"timeToLive": 600,
+		"$weirdKey" : "with-colon-spacing-before-value",
+		"plan9Key" : "just an example with a numeral",
+		"__metadataKey": "You see this in OData 2.0",
+		"__metadata": "You see this in OData 2.0",
+		"capitalized": "a capitalized key",
+		"aHyphenatedKey": "a hyphenated key",
+		"camelCaseKey": "a camelCase key",
+		"upperCamelCaseKey": "an UpperCamelCase key"
+	}
+	`
+
+	// Compile-time functional-interface type check/enforcement "test"
+	var trans Transformer = CamelCaseKeys()
+
+	for _, testData := range []struct {
+		jsonBytes string
+		direction Direction
+	}{
+		{originalJSON, Marshal},
+		{originalJSON, Unmarshal},
+		{camelCaseJSON, Marshal},
+		{camelCaseJSON, Unmarshal},
+	} {
+		if output := trans([]byte(testData.jsonBytes), testData.direction); string(output) != camelCaseJSON {
+			t.Errorf("%s output of %s doesn't match expected %s", testData.direction, output, camelCaseJSON)
+		}
+	}
+}
+
 func TestValidIdentifierKeys(t *testing.T) {
 	const invalidKeyJSON = `
 	{
@@ -80,6 +139,8 @@ func TestValidIdentifierKeys(t *testing.T) {
 		"plan9_key" : "just an example with a numeral",
 		"__metadata_key": "You see this in OData 2.0",
 		"__metadata": "You see this in OData 2.0",
+		"Capitalized": "a capitalized key",
+		"a-hyphenated-key": "a hyphenated key",
 		"3^%!@#*identifier-pls&": "Weird key that isn't a valid Go identifier"
 	}
 	`
@@ -97,6 +158,8 @@ func TestValidIdentifierKeys(t *testing.T) {
 		"plan9key" : "just an example with a numeral",
 		"metadatakey": "You see this in OData 2.0",
 		"metadata": "You see this in OData 2.0",
+		"Capitalized": "a capitalized key",
+		"ahyphenatedkey": "a hyphenated key",
 		"identifierpls": "Weird key that isn't a valid Go identifier"
 	}
 	`
