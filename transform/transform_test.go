@@ -22,6 +22,43 @@ func TestDirection_String(t *testing.T) {
 	}
 }
 
+func TestBytes(t *testing.T) {
+	testData := []byte("test-data")
+
+	transformers := []Transformer{
+		func(data []byte, direction Direction) []byte {
+			return bytes.ToUpper(data)
+		},
+		func(data []byte, direction Direction) []byte {
+			return bytes.Replace(data, []byte("-"), []byte(" "), -1)
+		},
+		func(data []byte, direction Direction) []byte {
+			prefix := fmt.Sprintf("%s: ", direction.String())
+
+			return append([]byte(prefix), data...)
+		},
+	}
+
+	for _, testCase := range []struct {
+		transformers   []Transformer
+		direction      Direction
+		expectedOutput []byte
+	}{
+		{transformers[0:1], Marshal, []byte("TEST-DATA")},
+		{transformers[0:1], Unmarshal, []byte("TEST-DATA")},
+		{transformers[1:2], Marshal, []byte("test data")},
+		{transformers[1:2], Unmarshal, []byte("test data")},
+		{transformers[2:3], Marshal, []byte("Marshal: test-data")},
+		{transformers[2:3], Unmarshal, []byte("Unmarshal: test-data")},
+		{transformers, Marshal, []byte("Marshal: TEST DATA")},
+		{transformers, Unmarshal, []byte("Unmarshal: TEST DATA")},
+	} {
+		if output := Bytes(testData, testCase.direction, testCase.transformers...); !bytes.Equal(testCase.expectedOutput, output) {
+			t.Errorf("%s output of %q doesn't match expected %q", testCase.direction, output, testCase.expectedOutput)
+		}
+	}
+}
+
 func TestOnlyForDirection(t *testing.T) {
 	mockDataReturn := []byte("mock data")
 
