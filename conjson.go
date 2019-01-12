@@ -60,14 +60,14 @@ func (m *marshaler) MarshalJSON() ([]byte, error) {
 	marshalled, err := json.Marshal(m.value)
 
 	if nil == err {
-		marshalled = transformData(marshalled, transform.Marshal, m.transformers...)
+		marshalled = transform.Bytes(marshalled, transform.Marshal, m.transformers...)
 	}
 
 	return marshalled, err
 }
 
 func (um *unmarshaler) UnmarshalJSON(data []byte) error {
-	data = transformData(data, transform.Unmarshal, um.transformers...)
+	data = transform.Bytes(data, transform.Unmarshal, um.transformers...)
 
 	return json.Unmarshal(data, um.value)
 }
@@ -82,12 +82,4 @@ func (e *decoder) Decode(value interface{}) error {
 	return e.inner.Decode(
 		NewUnmarshaler(value, e.transformers...),
 	)
-}
-
-func transformData(data []byte, direction transform.Direction, transformers ...transform.Transformer) []byte {
-	for _, transformer := range transformers {
-		data = transformer(data, direction)
-	}
-
-	return data
 }

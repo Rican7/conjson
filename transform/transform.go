@@ -36,6 +36,15 @@ func (d Direction) String() string {
 	return "Unmarshal"
 }
 
+// Bytes TODO
+func Bytes(data []byte, direction Direction, transformers ...Transformer) []byte {
+	for _, transformer := range transformers {
+		data = transformer(data, direction)
+	}
+
+	return data
+}
+
 // OnlyForDirection TODO
 //
 // TODO: Naming?
