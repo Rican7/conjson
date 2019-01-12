@@ -59,6 +59,24 @@ func TestBytes(t *testing.T) {
 	}
 }
 
+// TestBytes_AssertDoesntModifyPassedBytes tests that our passed bytes aren't
+// modified in-place, but rather that we receive a copy
+func TestBytes_AssertDoesntModifyPassedBytes(t *testing.T) {
+	testData := []byte("test-data")
+	const badByte = '!'
+
+	transformerThatModifiesBytesInPlace := func(data []byte, direction Direction) []byte {
+		data[0] = badByte
+
+		return data
+	}
+
+	// If our output matches our input, then we know we've modified our passed data
+	if output := Bytes(testData, Marshal, transformerThatModifiesBytesInPlace); bytes.Equal(testData, output) {
+		t.Error("Input data was modified!")
+	}
+}
+
 func TestOnlyForDirection(t *testing.T) {
 	mockDataReturn := []byte("mock data")
 
