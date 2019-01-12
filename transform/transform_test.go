@@ -9,15 +9,15 @@ import (
 )
 
 func TestDirection_String(t *testing.T) {
-	for _, testData := range []struct {
+	for _, testCase := range []struct {
 		direction      Direction
 		expectedString string
 	}{
 		{Marshal, "Marshal"},
 		{Unmarshal, "Unmarshal"},
 	} {
-		if str := testData.direction.String(); testData.expectedString != str {
-			t.Errorf("%q doesn't match expected %q", str, testData.expectedString)
+		if str := testCase.direction.String(); testCase.expectedString != str {
+			t.Errorf("%q doesn't match expected %q", str, testCase.expectedString)
 		}
 	}
 }
@@ -70,7 +70,7 @@ func TestOnlyForDirection(t *testing.T) {
 	var marshalTrans Transformer = OnlyForDirection(Marshal, mockTransformer)
 	var unmarshalTrans Transformer = OnlyForDirection(Unmarshal, mockTransformer)
 
-	for _, testData := range []struct {
+	for _, testCase := range []struct {
 		trans        Transformer
 		direction    Direction
 		callExpected bool
@@ -80,8 +80,8 @@ func TestOnlyForDirection(t *testing.T) {
 		{unmarshalTrans, Marshal, false},
 		{unmarshalTrans, Unmarshal, true},
 	} {
-		if output := testData.trans([]byte(""), testData.direction); testData.callExpected && !bytes.Equal(output, mockDataReturn) {
-			t.Errorf("%s output of %q doesn't match expected %q", testData.direction, output, mockDataReturn)
+		if output := testCase.trans([]byte(""), testCase.direction); testCase.callExpected && !bytes.Equal(output, mockDataReturn) {
+			t.Errorf("%s output of %q doesn't match expected %q", testCase.direction, output, mockDataReturn)
 		}
 	}
 }
@@ -95,7 +95,7 @@ func TestAlwaysAsDirection(t *testing.T) {
 	var marshalTrans Transformer = AlwaysAsDirection(Marshal, mockTransformer)
 	var unmarshalTrans Transformer = AlwaysAsDirection(Unmarshal, mockTransformer)
 
-	for _, testData := range []struct {
+	for _, testCase := range []struct {
 		trans             Transformer
 		expectedDirection Direction
 		direction         Direction
@@ -105,10 +105,10 @@ func TestAlwaysAsDirection(t *testing.T) {
 		{unmarshalTrans, Unmarshal, Marshal},
 		{unmarshalTrans, Unmarshal, Unmarshal},
 	} {
-		expectedDirectionBytes := []byte(testData.expectedDirection.String())
+		expectedDirectionBytes := []byte(testCase.expectedDirection.String())
 
-		if output := testData.trans([]byte(""), testData.direction); !bytes.Equal(output, expectedDirectionBytes) {
-			t.Errorf("%s output of %q doesn't match expected %q", testData.direction, output, expectedDirectionBytes)
+		if output := testCase.trans([]byte(""), testCase.direction); !bytes.Equal(output, expectedDirectionBytes) {
+			t.Errorf("%s output of %q doesn't match expected %q", testCase.direction, output, expectedDirectionBytes)
 		}
 	}
 }
@@ -202,7 +202,7 @@ func TestCamelCaseKeys(t *testing.T) {
 	// Compile-time functional-interface type check/enforcement "test"
 	var trans Transformer = CamelCaseKeys()
 
-	for _, testData := range []struct {
+	for _, testCase := range []struct {
 		jsonBytes string
 		direction Direction
 	}{
@@ -211,8 +211,8 @@ func TestCamelCaseKeys(t *testing.T) {
 		{camelCaseJSON, Marshal},
 		{camelCaseJSON, Unmarshal},
 	} {
-		if output := trans([]byte(testData.jsonBytes), testData.direction); string(output) != camelCaseJSON {
-			t.Errorf("%s output of %s doesn't match expected %s", testData.direction, output, camelCaseJSON)
+		if output := trans([]byte(testCase.jsonBytes), testCase.direction); string(output) != camelCaseJSON {
+			t.Errorf("%s output of %s doesn't match expected %s", testCase.direction, output, camelCaseJSON)
 		}
 	}
 }
@@ -259,7 +259,7 @@ func TestValidIdentifierKeys(t *testing.T) {
 	// Compile-time functional-interface type check/enforcement "test"
 	var trans Transformer = ValidIdentifierKeys()
 
-	for _, testData := range []struct {
+	for _, testCase := range []struct {
 		jsonBytes string
 		direction Direction
 	}{
@@ -268,10 +268,10 @@ func TestValidIdentifierKeys(t *testing.T) {
 		{validKeyJSON, Marshal},
 		{validKeyJSON, Unmarshal},
 	} {
-		output := trans([]byte(testData.jsonBytes), testData.direction)
+		output := trans([]byte(testCase.jsonBytes), testCase.direction)
 
 		if string(output) != validKeyJSON {
-			t.Errorf("%s output of %s doesn't match expected %s", testData.direction, output, validKeyJSON)
+			t.Errorf("%s output of %s doesn't match expected %s", testCase.direction, output, validKeyJSON)
 		}
 
 		var testMapForKeys map[string]json.RawMessage
