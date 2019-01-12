@@ -1,6 +1,7 @@
 package transformer
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"go/parser"
@@ -17,6 +18,60 @@ func TestDirection_String(t *testing.T) {
 	} {
 		if str := testData.direction.String(); testData.expectedString != str {
 			t.Errorf("%q doesn't match expected %q", str, testData.expectedString)
+		}
+	}
+}
+
+func TestOnlyForDirection(t *testing.T) {
+	mockDataReturn := []byte("mock data")
+
+	mockTransformer := func(data []byte, direction Direction) []byte {
+		return mockDataReturn
+	}
+
+	// Compile-time functional-interface type check/enforcement "test"
+	var marshalTrans Transformer = OnlyForDirection(Marshal, mockTransformer)
+	var unmarshalTrans Transformer = OnlyForDirection(Unmarshal, mockTransformer)
+
+	for _, testData := range []struct {
+		trans        Transformer
+		direction    Direction
+		callExpected bool
+	}{
+		{marshalTrans, Marshal, true},
+		{marshalTrans, Unmarshal, false},
+		{unmarshalTrans, Marshal, false},
+		{unmarshalTrans, Unmarshal, true},
+	} {
+		if output := testData.trans([]byte(""), testData.direction); testData.callExpected && !bytes.Equal(output, mockDataReturn) {
+			t.Errorf("%s output of %q doesn't match expected %q", testData.direction, output, mockDataReturn)
+		}
+	}
+}
+
+func TestAlwaysAsDirection(t *testing.T) {
+	mockTransformer := func(data []byte, direction Direction) []byte {
+		return []byte(direction.String())
+	}
+
+	// Compile-time functional-interface type check/enforcement "test"
+	var marshalTrans Transformer = AlwaysAsDirection(Marshal, mockTransformer)
+	var unmarshalTrans Transformer = AlwaysAsDirection(Unmarshal, mockTransformer)
+
+	for _, testData := range []struct {
+		trans             Transformer
+		expectedDirection Direction
+		direction         Direction
+	}{
+		{marshalTrans, Marshal, Marshal},
+		{marshalTrans, Marshal, Unmarshal},
+		{unmarshalTrans, Unmarshal, Marshal},
+		{unmarshalTrans, Unmarshal, Unmarshal},
+	} {
+		expectedDirectionBytes := []byte(testData.expectedDirection.String())
+
+		if output := testData.trans([]byte(""), testData.direction); !bytes.Equal(output, expectedDirectionBytes) {
+			t.Errorf("%s output of %q doesn't match expected %q", testData.direction, output, expectedDirectionBytes)
 		}
 	}
 }
