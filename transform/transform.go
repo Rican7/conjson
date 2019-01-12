@@ -1,4 +1,4 @@
-package transformer
+package transform
 
 import (
 	"bytes"
@@ -39,10 +39,10 @@ func (d Direction) String() string {
 // OnlyForDirection TODO
 //
 // TODO: Naming?
-func OnlyForDirection(only Direction, transformer Transformer) Transformer {
+func OnlyForDirection(only Direction, transform Transformer) Transformer {
 	return func(data []byte, direction Direction) []byte {
 		if direction == only {
-			return transformer(data, direction)
+			return transform(data, direction)
 		}
 
 		return data
@@ -52,9 +52,9 @@ func OnlyForDirection(only Direction, transformer Transformer) Transformer {
 // AlwaysAsDirection TODO
 //
 // TODO: Naming?
-func AlwaysAsDirection(always Direction, transformer Transformer) Transformer {
+func AlwaysAsDirection(always Direction, transform Transformer) Transformer {
 	return func(data []byte, direction Direction) []byte {
-		return transformer(data, always)
+		return transform(data, always)
 	}
 }
 

@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Rican7/conjson/transformer"
+	"github.com/Rican7/conjson/transform"
 )
 
 var (
@@ -21,7 +21,7 @@ var (
 
 // Mocks
 
-var noOpTransformer transformer.Transformer = func(data []byte, direction transformer.Direction) []byte {
+var noOpTransformer transform.Transformer = func(data []byte, direction transform.Direction) []byte {
 	return data
 }
 
@@ -48,8 +48,8 @@ func (em *errorMarshaler) MarshalJSON() ([]byte, error) {
 	return json.Marshal((bool)(*em))
 }
 
-func mockTransformer(timesRan *int, directionRan *transformer.Direction) transformer.Transformer {
-	return func(data []byte, direction transformer.Direction) []byte {
+func mockTransformer(timesRan *int, directionRan *transform.Direction) transform.Transformer {
+	return func(data []byte, direction transform.Direction) []byte {
 		*timesRan++
 		*directionRan = direction
 
@@ -217,7 +217,7 @@ func TestMarshaler_MarshalJSON(t *testing.T) {
 		}
 	}
 
-	val, timesRan, directionRan := false, 0, transformer.Unmarshal
+	val, timesRan, directionRan := false, 0, transform.Unmarshal
 	if _, err := NewMarshaler(&val, mockTransformer(&timesRan, &directionRan)).MarshalJSON(); true {
 		if nil != err {
 			t.Errorf("Unexpected error (%T) %q", err, err)
@@ -231,13 +231,13 @@ func TestMarshaler_MarshalJSON(t *testing.T) {
 			t.Errorf("timesRan was `%d`, when expected to be `1`", timesRan)
 		}
 
-		if transformer.Marshal != directionRan {
-			t.Error("directionRan isn't the expected transformer.Marshal")
+		if transform.Marshal != directionRan {
+			t.Error("directionRan isn't the expected transform.Marshal")
 		}
 	}
 
-	val, timesRan, directionRan = false, 0, transformer.Unmarshal
-	transformers := []transformer.Transformer{
+	val, timesRan, directionRan = false, 0, transform.Unmarshal
+	transformers := []transform.Transformer{
 		mockTransformer(&timesRan, &directionRan),
 		mockTransformer(&timesRan, &directionRan),
 	}
@@ -254,8 +254,8 @@ func TestMarshaler_MarshalJSON(t *testing.T) {
 			t.Errorf("timesRan was `%d`, when expected to be `%d`", timesRan, len(transformers))
 		}
 
-		if transformer.Marshal != directionRan {
-			t.Error("directionRan isn't the expected transformer.Marshal")
+		if transform.Marshal != directionRan {
+			t.Error("directionRan isn't the expected transform.Marshal")
 		}
 	}
 
@@ -286,7 +286,7 @@ func TestUnmarshaler_UnmarshalJSON(t *testing.T) {
 		}
 	}
 
-	val, timesRan, directionRan := false, 0, transformer.Marshal
+	val, timesRan, directionRan := false, 0, transform.Marshal
 	if err := NewUnmarshaler(&val, mockTransformer(&timesRan, &directionRan)).UnmarshalJSON(testJSONBytes); true {
 		if nil != err {
 			t.Errorf("Unexpected error (%T) %q", err, err)
@@ -300,13 +300,13 @@ func TestUnmarshaler_UnmarshalJSON(t *testing.T) {
 			t.Errorf("timesRan was `%d`, when expected to be `1`", timesRan)
 		}
 
-		if transformer.Unmarshal != directionRan {
-			t.Error("directionRan isn't the expected transformer.Ununmarshal")
+		if transform.Unmarshal != directionRan {
+			t.Error("directionRan isn't the expected transform.Ununmarshal")
 		}
 	}
 
-	val, timesRan, directionRan = false, 0, transformer.Marshal
-	transformers := []transformer.Transformer{
+	val, timesRan, directionRan = false, 0, transform.Marshal
+	transformers := []transform.Transformer{
 		mockTransformer(&timesRan, &directionRan),
 		mockTransformer(&timesRan, &directionRan),
 	}
@@ -323,12 +323,12 @@ func TestUnmarshaler_UnmarshalJSON(t *testing.T) {
 			t.Errorf("timesRan was `%d`, when expected to be `%d`", timesRan, len(transformers))
 		}
 
-		if transformer.Unmarshal != directionRan {
-			t.Error("directionRan isn't the expected transformer.Ununmarshal")
+		if transform.Unmarshal != directionRan {
+			t.Error("directionRan isn't the expected transform.Ununmarshal")
 		}
 	}
 
-	timesRan, directionRan = 0, transformer.Marshal
+	timesRan, directionRan = 0, transform.Marshal
 	if err := NewUnmarshaler(false, mockTransformer(&timesRan, &directionRan)).UnmarshalJSON(testJSONBytes); true {
 		if nil == err {
 			t.Error("Expected error was nil")
@@ -338,8 +338,8 @@ func TestUnmarshaler_UnmarshalJSON(t *testing.T) {
 			t.Errorf("timesRan was `%d`, when expected to be `1`", timesRan)
 		}
 
-		if transformer.Unmarshal != directionRan {
-			t.Error("directionRan isn't the expected transformer.Ununmarshal")
+		if transform.Unmarshal != directionRan {
+			t.Error("directionRan isn't the expected transform.Ununmarshal")
 		}
 	}
 }
@@ -363,7 +363,7 @@ func TestEncoder_Encode(t *testing.T) {
 		}
 	}
 
-	val, buf, timesRan, directionRan := false, bytes.Buffer{}, 0, transformer.Unmarshal
+	val, buf, timesRan, directionRan := false, bytes.Buffer{}, 0, transform.Unmarshal
 	if err := NewEncoder(json.NewEncoder(&buf), mockTransformer(&timesRan, &directionRan)).Encode(&val); true {
 		if nil != err {
 			t.Errorf("Unexpected error (%T) %q", err, err)
@@ -377,13 +377,13 @@ func TestEncoder_Encode(t *testing.T) {
 			t.Errorf("timesRan was `%d`, when expected to be `1`", timesRan)
 		}
 
-		if transformer.Marshal != directionRan {
-			t.Error("directionRan isn't the expected transformer.Marshal")
+		if transform.Marshal != directionRan {
+			t.Error("directionRan isn't the expected transform.Marshal")
 		}
 	}
 
-	val, buf, timesRan, directionRan = false, bytes.Buffer{}, 0, transformer.Unmarshal
-	transformers := []transformer.Transformer{
+	val, buf, timesRan, directionRan = false, bytes.Buffer{}, 0, transform.Unmarshal
+	transformers := []transform.Transformer{
 		mockTransformer(&timesRan, &directionRan),
 		mockTransformer(&timesRan, &directionRan),
 	}
@@ -400,8 +400,8 @@ func TestEncoder_Encode(t *testing.T) {
 			t.Errorf("timesRan was `%d`, when expected to be `%d`", timesRan, len(transformers))
 		}
 
-		if transformer.Marshal != directionRan {
-			t.Error("directionRan isn't the expected transformer.Marshal")
+		if transform.Marshal != directionRan {
+			t.Error("directionRan isn't the expected transform.Marshal")
 		}
 	}
 
@@ -433,7 +433,7 @@ func TestDecoder_UnmarshalJSON(t *testing.T) {
 		}
 	}
 
-	val, buf, timesRan, directionRan := false, bytes.NewBuffer(testJSONBytes), 0, transformer.Marshal
+	val, buf, timesRan, directionRan := false, bytes.NewBuffer(testJSONBytes), 0, transform.Marshal
 	if err := NewDecoder(json.NewDecoder(buf), mockTransformer(&timesRan, &directionRan)).Decode(&val); true {
 		if nil != err {
 			t.Errorf("Unexpected error (%T) %q", err, err)
@@ -447,13 +447,13 @@ func TestDecoder_UnmarshalJSON(t *testing.T) {
 			t.Errorf("timesRan was `%d`, when expected to be `1`", timesRan)
 		}
 
-		if transformer.Unmarshal != directionRan {
-			t.Error("directionRan isn't the expected transformer.Ununmarshal")
+		if transform.Unmarshal != directionRan {
+			t.Error("directionRan isn't the expected transform.Ununmarshal")
 		}
 	}
 
-	val, buf, timesRan, directionRan = false, bytes.NewBuffer(testJSONBytes), 0, transformer.Marshal
-	transformers := []transformer.Transformer{
+	val, buf, timesRan, directionRan = false, bytes.NewBuffer(testJSONBytes), 0, transform.Marshal
+	transformers := []transform.Transformer{
 		mockTransformer(&timesRan, &directionRan),
 		mockTransformer(&timesRan, &directionRan),
 	}
@@ -470,12 +470,12 @@ func TestDecoder_UnmarshalJSON(t *testing.T) {
 			t.Errorf("timesRan was `%d`, when expected to be `%d`", timesRan, len(transformers))
 		}
 
-		if transformer.Unmarshal != directionRan {
-			t.Error("directionRan isn't the expected transformer.Ununmarshal")
+		if transform.Unmarshal != directionRan {
+			t.Error("directionRan isn't the expected transform.Ununmarshal")
 		}
 	}
 
-	buf, timesRan, directionRan = bytes.NewBuffer(testJSONBytes), 0, transformer.Marshal
+	buf, timesRan, directionRan = bytes.NewBuffer(testJSONBytes), 0, transform.Marshal
 	if err := NewDecoder(json.NewDecoder(buf), mockTransformer(&timesRan, &directionRan)).Decode(false); true {
 		if nil == err {
 			t.Error("Expected error was nil")
@@ -485,8 +485,8 @@ func TestDecoder_UnmarshalJSON(t *testing.T) {
 			t.Errorf("timesRan was `%d`, when expected to be `1`", timesRan)
 		}
 
-		if transformer.Unmarshal != directionRan {
-			t.Error("directionRan isn't the expected transformer.Ununmarshal")
+		if transform.Unmarshal != directionRan {
+			t.Error("directionRan isn't the expected transform.Ununmarshal")
 		}
 	}
 }

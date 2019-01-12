@@ -3,7 +3,7 @@ package conjson
 import (
 	"encoding/json"
 
-	"github.com/Rican7/conjson/transformer"
+	"github.com/Rican7/conjson/transform"
 )
 
 // Encoder TODO
@@ -18,41 +18,41 @@ type Decoder interface {
 
 type marshaler struct {
 	value        interface{}
-	transformers []transformer.Transformer
+	transformers []transform.Transformer
 }
 
 type unmarshaler struct {
 	value        interface{}
-	transformers []transformer.Transformer
+	transformers []transform.Transformer
 }
 
 type encoder struct {
 	inner        *json.Encoder
-	transformers []transformer.Transformer
+	transformers []transform.Transformer
 }
 
 type decoder struct {
 	inner        *json.Decoder
-	transformers []transformer.Transformer
+	transformers []transform.Transformer
 }
 
 // NewMarshaler TODO
-func NewMarshaler(value interface{}, transformers ...transformer.Transformer) json.Marshaler {
+func NewMarshaler(value interface{}, transformers ...transform.Transformer) json.Marshaler {
 	return &marshaler{value, transformers}
 }
 
 // NewUnmarshaler TODO
-func NewUnmarshaler(value interface{}, transformers ...transformer.Transformer) json.Unmarshaler {
+func NewUnmarshaler(value interface{}, transformers ...transform.Transformer) json.Unmarshaler {
 	return &unmarshaler{value, transformers}
 }
 
 // NewEncoder TODO
-func NewEncoder(inner *json.Encoder, transformers ...transformer.Transformer) Encoder {
+func NewEncoder(inner *json.Encoder, transformers ...transform.Transformer) Encoder {
 	return &encoder{inner, transformers}
 }
 
 // NewDecoder TODO
-func NewDecoder(inner *json.Decoder, transformers ...transformer.Transformer) Decoder {
+func NewDecoder(inner *json.Decoder, transformers ...transform.Transformer) Decoder {
 	return &decoder{inner, transformers}
 }
 
@@ -60,14 +60,14 @@ func (m *marshaler) MarshalJSON() ([]byte, error) {
 	marshalled, err := json.Marshal(m.value)
 
 	if nil == err {
-		marshalled = transform(marshalled, transformer.Marshal, m.transformers...)
+		marshalled = transformData(marshalled, transform.Marshal, m.transformers...)
 	}
 
 	return marshalled, err
 }
 
 func (um *unmarshaler) UnmarshalJSON(data []byte) error {
-	data = transform(data, transformer.Unmarshal, um.transformers...)
+	data = transformData(data, transform.Unmarshal, um.transformers...)
 
 	return json.Unmarshal(data, um.value)
 }
@@ -84,7 +84,7 @@ func (e *decoder) Decode(value interface{}) error {
 	)
 }
 
-func transform(data []byte, direction transformer.Direction, transformers ...transformer.Transformer) []byte {
+func transformData(data []byte, direction transform.Direction, transformers ...transform.Transformer) []byte {
 	for _, transformer := range transformers {
 		data = transformer(data, direction)
 	}

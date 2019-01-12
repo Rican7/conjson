@@ -1,4 +1,4 @@
-package transformer
+package transform
 
 import (
 	"bytes"
