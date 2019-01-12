@@ -36,6 +36,28 @@ func (d Direction) String() string {
 	return "Unmarshal"
 }
 
+// OnlyForDirection TODO
+//
+// TODO: Naming?
+func OnlyForDirection(only Direction, transformer Transformer) Transformer {
+	return func(data []byte, direction Direction) []byte {
+		if direction == only {
+			return transformer(data, direction)
+		}
+
+		return data
+	}
+}
+
+// AlwaysAsDirection TODO
+//
+// TODO: Naming?
+func AlwaysAsDirection(always Direction, transformer Transformer) Transformer {
+	return func(data []byte, direction Direction) []byte {
+		return transformer(data, always)
+	}
+}
+
 // ConventionalKeys TODO
 func ConventionalKeys() Transformer {
 	return func(data []byte, direction Direction) []byte {
