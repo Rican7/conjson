@@ -38,11 +38,17 @@ func (d Direction) String() string {
 
 // Bytes TODO
 func Bytes(data []byte, direction Direction, transformers ...Transformer) []byte {
+	// Make a copy of the source data to make sure that transformers don't
+	// modify the source, but instead return a copy of the data as the
+	// interface intends
+	transformed := make([]byte, len(data))
+	copy(transformed, data)
+
 	for _, transformer := range transformers {
-		data = transformer(data, direction)
+		transformed = transformer(transformed, direction)
 	}
 
-	return data
+	return transformed
 }
 
 // OnlyForDirection TODO
