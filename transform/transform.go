@@ -26,8 +26,8 @@ const (
 )
 
 var (
-	keyMatchRegex             = regexp.MustCompile(`\"(.+?)\"\s*?:`)
-	camelCaseWordBarrierRegex = regexp.MustCompile(`(.)([A-Z])`)
+	keyMatchRegex             = regexp.MustCompile(`\"([^\"]*?)\"\s*?:`)
+	camelCaseWordBarrierRegex = regexp.MustCompile(`([^A-Z])([A-Z])`)
 	snakeCaseWordBarrierRegex = regexp.MustCompile(`(?:[^_])_(.)`)
 )
 
