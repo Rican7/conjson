@@ -76,6 +76,15 @@ func AlwaysAsDirection(always Direction, transform Transformer) Transformer {
 	}
 }
 
+// ReverseDirection takes a Transformer and returns a new Transformer that
+// executes the given Transformer as if the transformation direction was the
+// oppopsite of the given direction.
+func ReverseDirection(transform Transformer) Transformer {
+	return func(data []byte, direction Direction) []byte {
+		return transform(data, !direction)
+	}
+}
+
 // ConventionalKeys returns a Transformer that converts every JSON "key" (or
 // JSON object "name") in the transformed data set, depending on the
 // transformation direction, based on common JSON data style conventions.
