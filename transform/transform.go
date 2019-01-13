@@ -26,9 +26,10 @@ const (
 )
 
 var (
-	keyMatchRegex             = regexp.MustCompile(`\"([^\"]*?)\"\s*?:`)
-	camelCaseWordBarrierRegex = regexp.MustCompile(`([^A-Z])([A-Z])`)
-	snakeCaseWordBarrierRegex = regexp.MustCompile(`(?:[^_])_(.)`)
+	keyMatchRegex                     = regexp.MustCompile(`\"([^\"]*?)\"\s*?:`)
+	camelCaseWordBarrierRegex         = regexp.MustCompile(`([^A-Z])([A-Z])`)
+	snakeCaseWordBarrierRegex         = regexp.MustCompile(`(?:[^_])_(.)`)
+	repeatedUpperCaseWordBarrierRegex = regexp.MustCompile(`(?:[A-Z])([A-Z]+?)(?:[^A-Z]|$)`)
 )
 
 // String satisfies the fmt.Stringer interface to provide a human-readable name
@@ -125,8 +126,15 @@ func CamelCaseKeys() Transformer {
 				// Translate hyphenated keys to underscored ("snake_case")
 				key = bytes.Replace(key, []byte("-"), []byte("_"), -1)
 
+				// Transform snake-case keys to camel-case keys
 				key = snakeCaseToCamelCaseWordBarrier(key)
 
+				// Remove repeated upper-case letters
+				key = repeatedUpperCaseWordBarrierRegex.ReplaceAllFunc(key, func(key []byte) []byte {
+					return append(key[0:1], bytes.ToLower(key[1:])...)
+				})
+
+				// Lower-case the first letter
 				return append(bytes.ToLower(key[0:1]), key[1:]...)
 			},
 		)
