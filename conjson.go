@@ -1,3 +1,8 @@
+// Package conjson provides JSON Encoder and Decoder wrappers, along with
+// Marshaler and Unmarshaler implementations, that allow for the transformation
+// of the JSON data that is used in those mechanisms.
+//
+// Copyright © Trevor N. Suarez (Rican7)
 package conjson
 
 import (

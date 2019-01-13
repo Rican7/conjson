@@ -1,3 +1,7 @@
+// Package transform provides mechanisms to transform a data source, with a
+// specific focus on JSON data handling.
+//
+// Copyright © Trevor N. Suarez (Rican7)
 package transform
 
 import (
