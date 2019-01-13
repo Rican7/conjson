@@ -131,6 +131,29 @@ func TestAlwaysAsDirection(t *testing.T) {
 	}
 }
 
+func TestReverseDirection(t *testing.T) {
+	// Compile-time functional-interface type check/enforcement "test"
+	var trans Transformer = ReverseDirection(
+		func(data []byte, direction Direction) []byte {
+			return []byte(direction.String())
+		},
+	)
+
+	for _, testCase := range []struct {
+		direction         Direction
+		expectedDirection Direction
+	}{
+		{Marshal, Unmarshal},
+		{Unmarshal, Marshal},
+	} {
+		expectedDirectionBytes := []byte(testCase.expectedDirection.String())
+
+		if output := trans([]byte(""), testCase.direction); !bytes.Equal(output, expectedDirectionBytes) {
+			t.Errorf("%s output of %q doesn't match expected %q", testCase.direction, output, expectedDirectionBytes)
+		}
+	}
+}
+
 func TestConventionalKeys(t *testing.T) {
 	const snakeCaseJSON = `
 	{
