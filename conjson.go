@@ -2,6 +2,9 @@
 // Marshaler and Unmarshaler implementations, that allow for the transformation
 // of the JSON data that is used in those mechanisms.
 //
+// The examples may provide more obvious context and reasoning as to why a user
+// would desire these transformations.
+//
 // Copyright © Trevor N. Suarez (Rican7)
 package conjson
 
