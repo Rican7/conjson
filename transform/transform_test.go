@@ -193,7 +193,8 @@ func TestCamelCaseKeys(t *testing.T) {
 		"Capitalized": "a capitalized key",
 		"a-hyphenated-key": "a hyphenated key",
 		"camelCaseKey": "a camelCase key",
-		"UpperCamelCaseKey": "an UpperCamelCase key"
+		"UpperCamelCaseKey": "an UpperCamelCase key",
+		"a-strange_mixedAndConfused_CaseStyle": "an UpperCamelCase key"
 	}
 	`
 
@@ -213,7 +214,8 @@ func TestCamelCaseKeys(t *testing.T) {
 		"capitalized": "a capitalized key",
 		"aHyphenatedKey": "a hyphenated key",
 		"camelCaseKey": "a camelCase key",
-		"upperCamelCaseKey": "an UpperCamelCase key"
+		"upperCamelCaseKey": "an UpperCamelCase key",
+		"aStrangeMixedAndConfusedCaseStyle": "an UpperCamelCase key"
 	}
 	`
 
