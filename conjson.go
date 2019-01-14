@@ -18,7 +18,7 @@ import (
 // compatible with `encoding/json.Encoder`.
 type Encoder interface {
 	// Encode takes a value and encodes the JSON representation of that value to
-	// the underyling/inner encoder.
+	// the underlying/inner encoder.
 	//
 	// See the documentation for both `encoding/json.Encoder` and
 	// `encoding/json.Marshal` for more details about the workings of the
@@ -29,7 +29,7 @@ type Encoder interface {
 // Decoder is an interface defining a simple JSON decoder, with an interface
 // compatible with `encoding/json.Decoder`.
 type Decoder interface {
-	// Decode reads the next JSON represented value from the underyling/inner
+	// Decode reads the next JSON represented value from the underlying/inner
 	// decoder and stores the decoded result in the pointed to passed value.
 	//
 	// See the documentation for both `encoding/json.Decoder` and
