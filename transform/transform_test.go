@@ -84,9 +84,8 @@ func TestOnlyForDirection(t *testing.T) {
 		return mockDataReturn
 	}
 
-	// Compile-time functional-interface type check/enforcement "test"
-	var marshalTrans Transformer = OnlyForDirection(Marshal, mockTransformer)
-	var unmarshalTrans Transformer = OnlyForDirection(Unmarshal, mockTransformer)
+	marshalTrans := OnlyForDirection(Marshal, mockTransformer)
+	unmarshalTrans := OnlyForDirection(Unmarshal, mockTransformer)
 
 	for _, testCase := range []struct {
 		trans        Transformer
@@ -109,9 +108,8 @@ func TestAlwaysAsDirection(t *testing.T) {
 		return []byte(direction.String())
 	}
 
-	// Compile-time functional-interface type check/enforcement "test"
-	var marshalTrans Transformer = AlwaysAsDirection(Marshal, mockTransformer)
-	var unmarshalTrans Transformer = AlwaysAsDirection(Unmarshal, mockTransformer)
+	marshalTrans := AlwaysAsDirection(Marshal, mockTransformer)
+	unmarshalTrans := AlwaysAsDirection(Unmarshal, mockTransformer)
 
 	for _, testCase := range []struct {
 		trans             Transformer
@@ -132,8 +130,7 @@ func TestAlwaysAsDirection(t *testing.T) {
 }
 
 func TestReverseDirection(t *testing.T) {
-	// Compile-time functional-interface type check/enforcement "test"
-	var trans Transformer = ReverseDirection(
+	trans := ReverseDirection(
 		func(data []byte, direction Direction) []byte {
 			return []byte(direction.String())
 		},
@@ -187,8 +184,7 @@ func TestConventionalKeys(t *testing.T) {
 	}
 	`
 
-	// Compile-time functional-interface type check/enforcement "test"
-	var trans Transformer = ConventionalKeys()
+	trans := ConventionalKeys()
 
 	if output := trans([]byte(camelCaseJSON), Marshal); string(output) != snakeCaseJSON {
 		t.Errorf("Marshal output of %s doesn't match expected %s", output, snakeCaseJSON)
@@ -244,8 +240,7 @@ func TestCamelCaseKeys(t *testing.T) {
 	}
 	`
 
-	// Compile-time functional-interface type check/enforcement "test"
-	var trans Transformer = CamelCaseKeys()
+	trans := CamelCaseKeys()
 
 	for _, testCase := range []struct {
 		jsonBytes string
@@ -301,8 +296,7 @@ func TestValidIdentifierKeys(t *testing.T) {
 	}
 	`
 
-	// Compile-time functional-interface type check/enforcement "test"
-	var trans Transformer = ValidIdentifierKeys()
+	trans := ValidIdentifierKeys()
 
 	for _, testCase := range []struct {
 		jsonBytes string
