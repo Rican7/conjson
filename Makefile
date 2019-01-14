@@ -3,8 +3,9 @@ PARENT_BRANCH ?= master
 
 # Set the mode for code-coverage
 GO_TEST_COVERAGE_MODE ?= count
-GO_TEST_COVERAGE_FILE_NAME ?= coverage.out
-GO_TEST_COVERAGE_HTML_FILE_NAME ?= coverage.html
+GO_TEST_COVERAGE_DIR_NAME ?= _report
+GO_TEST_COVERAGE_FILE_NAME ?= ${GO_TEST_COVERAGE_DIR_NAME}/coverage.out
+GO_TEST_COVERAGE_HTML_FILE_NAME ?= ${GO_TEST_COVERAGE_DIR_NAME}/coverage.html
 
 # Set flags for `gofmt`
 GOFMT_FLAGS ?= -s
@@ -47,15 +48,16 @@ test-with-coverage:
 test-with-coverage-json-output:
 	go test -cover -json ./...
 
-test-with-coverage-profile:
-${GO_TEST_COVERAGE_FILE_NAME}:
+test-with-coverage-profile ${GO_TEST_COVERAGE_FILE_NAME}:
+	@mkdir -p "$$(dirname "${GO_TEST_COVERAGE_FILE_NAME}")"
 	go test -covermode ${GO_TEST_COVERAGE_MODE} -coverprofile ${GO_TEST_COVERAGE_FILE_NAME} ./...
 
-generate-test-coverage-html:
-${GO_TEST_COVERAGE_HTML_FILE_NAME}:
+generate-test-coverage-html ${GO_TEST_COVERAGE_HTML_FILE_NAME}:
+	@mkdir -p "$$(dirname "${GO_TEST_COVERAGE_HTML_FILE_NAME}")"
 	go tool cover -html=${GO_TEST_COVERAGE_FILE_NAME} -o ${GO_TEST_COVERAGE_HTML_FILE_NAME}
 
 test-with-coverage-profile-html: test-with-coverage-profile generate-test-coverage-html
+${GO_TEST_COVERAGE_DIR_NAME}: ${GO_TEST_COVERAGE_FILE_NAME} ${GO_TEST_COVERAGE_HTML_FILE_NAME}
 
 format-lint:
 	errors=$$(gofmt -l ${GOFMT_FLAGS} .); if [ "$${errors}" != "" ]; then echo "$${errors}"; exit 1; fi
