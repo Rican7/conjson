@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.com/Rican7/conjson.svg?branch=master)](https://travis-ci.com/Rican7/conjson)
 [![Coverage Status](https://coveralls.io/repos/github/Rican7/conjson/badge.svg)](https://coveralls.io/github/Rican7/conjson)
-[![Go Report Card](https://goreportcard.com/badge/Rican7/conjson)](http://goreportcard.com/report/Rican7/conjson)
+[![Go Report Card](https://goreportcard.com/badge/github.com/Rican7/conjson)](https://goreportcard.com/report/github.com/Rican7/conjson)
 [![GoDoc](https://godoc.org/github.com/Rican7/conjson?status.svg)](https://godoc.org/github.com/Rican7/conjson)
 [![Latest Stable Version](https://img.shields.io/github/release/Rican7/conjson.svg?style=flat)](https://github.com/Rican7/conjson/releases)
 
