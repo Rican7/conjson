@@ -17,6 +17,18 @@ This project is currently in "pre-release". While the code is heavily tested, th
 Vendor or "lock" this dependency if you plan on using it.
 
 
+## History
+
+For the curious, this project was born from [a 3+ year old (at the time of creation) "Gist"](https://gist.github.com/Rican7/39a3dc10c1499384ca91).
+
+Both that Gist, and eventually this larger project, were inspired by a desire to more easily work with APIs that
+accepted/returned JSON that had "snake_case"-style object keys.
+
+Basically, I wanted a way to Marshal and Unmarshal Go structures without having to add "tags" to each and every field of
+each and every structure. That Gist solved that problem for me, and now this library can do the same but with more
+power and flexibility.
+
+
 ## Examples
 
 ### Marshal
