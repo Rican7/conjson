@@ -1,6 +1,7 @@
 package conjson_test
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -113,4 +114,36 @@ func ExampleEncoder() {
 	//     "createdAt": "2015-11-17T20:43:31.0463576-05:00",
 	//     "updatedAt": "2018-12-24T13:21:15.7883416-07:00"
 	// }
+}
+
+func ExampleDecoder() {
+	sampleJSON := `
+	{
+	    "$title--": "Example Title",
+	    "$description--": "This is a description.",
+	    "$image_url--": "https://example.com/image.png",
+	    "$referred_by_url--": "https://example.com/referrer/index.html",
+	    "$is_active--": true,
+	    "$created_at--": "2015-11-17T20:43:31.0463576-05:00",
+	    "updated_at--": "2018-12-24T13:21:15.7883416-07:00"
+	}
+	`
+
+	var model exampleModel
+
+	decoder := conjson.NewDecoder(
+		json.NewDecoder(bytes.NewBufferString(sampleJSON)),
+		transform.ConventionalKeys(),
+		transform.ValidIdentifierKeys(),
+	)
+
+	decoder.Decode(&model)
+
+	fmt.Println(model.Title)
+	fmt.Println(model.Description)
+	fmt.Println(model.ImageURL)
+	// Output:
+	// Example Title
+	// This is a description.
+	// https://example.com/image.png
 }
