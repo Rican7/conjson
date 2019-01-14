@@ -48,9 +48,11 @@ test-with-coverage-json-output:
 	go test -cover -json ./...
 
 test-with-coverage-profile:
+${GO_TEST_COVERAGE_FILE_NAME}:
 	go test -covermode ${GO_TEST_COVERAGE_MODE} -coverprofile ${GO_TEST_COVERAGE_FILE_NAME} ./...
 
 generate-test-coverage-html:
+${GO_TEST_COVERAGE_HTML_FILE_NAME}:
 	go tool cover -html=${GO_TEST_COVERAGE_FILE_NAME} -o ${GO_TEST_COVERAGE_HTML_FILE_NAME}
 
 test-with-coverage-profile-html: test-with-coverage-profile generate-test-coverage-html
