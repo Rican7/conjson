@@ -36,7 +36,7 @@ var (
 	packageTime, _   = time.Parse(dateTimeFormat, packageDateTime)
 )
 
-func Example() {
+func Example_marshal() {
 	model := exampleModel{
 		Title:         "Example Title",
 		Description:   "This is a description.",
