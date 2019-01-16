@@ -17,9 +17,9 @@ This project is currently in "pre-release". While the code is heavily tested, th
 Vendor or "lock" this dependency if you plan on using it.
 
 
-## History
+## History and Motivation
 
-For the curious, this project was born from [a 3+ year old (at the time of creation) "Gist"](https://gist.github.com/Rican7/39a3dc10c1499384ca91).
+This project was originally born from [a 3+ year old (at the time of creation) "Gist"](https://gist.github.com/Rican7/39a3dc10c1499384ca91).
 
 Both that Gist, and eventually this larger project, were inspired by a desire to more easily work with APIs that
 accepted/returned JSON that had "snake_case"-style object keys.
