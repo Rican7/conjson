@@ -84,8 +84,19 @@ func Example_unmarshal() {
 		conjson.NewUnmarshaler(&model, transform.ConventionalKeys()),
 	)
 
-	fmt.Println(model.ReferredByURL)
-	// Output: https://example.com/referrer/index.html
+	// Print the "raw" model JSON to show result
+	rawJSON, _ := json.MarshalIndent(model, marshalPrefix, marshalIndent)
+	fmt.Println(string(rawJSON))
+	// Output:
+	// {
+	//     "Title": "Example Title",
+	//     "Description": "This is a description.",
+	//     "ImageURL": "https://example.com/image.png",
+	//     "ReferredByURL": "https://example.com/referrer/index.html",
+	//     "IsActive": true,
+	//     "CreatedAt": "2015-11-17T20:43:31-05:00",
+	//     "UpdatedAt": "2018-12-24T13:21:15-07:00"
+	// }
 }
 
 func ExampleEncoder() {
@@ -139,13 +150,17 @@ func ExampleDecoder() {
 
 	decoder.Decode(&model)
 
-	fmt.Println(model.Title)
-	fmt.Println(model.Description)
-	fmt.Println(model.ImageURL)
-	fmt.Println(model.UpdatedAt.Format(dateTimeFormat))
+	// Print the "raw" model JSON to show result
+	rawJSON, _ := json.MarshalIndent(model, marshalPrefix, marshalIndent)
+	fmt.Println(string(rawJSON))
 	// Output:
-	// Example Title
-	// This is a description.
-	// https://example.com/image.png
-	// 2018-12-24T13:21:15-07:00
+	// {
+	//     "Title": "Example Title",
+	//     "Description": "This is a description.",
+	//     "ImageURL": "https://example.com/image.png",
+	//     "ReferredByURL": "https://example.com/referrer/index.html",
+	//     "IsActive": true,
+	//     "CreatedAt": "2015-11-17T20:43:31-05:00",
+	//     "UpdatedAt": "2018-12-24T13:21:15-07:00"
+	// }
 }
