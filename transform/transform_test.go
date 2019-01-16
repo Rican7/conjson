@@ -214,7 +214,8 @@ func TestCamelCaseKeys(t *testing.T) {
 		"camelCaseKey": "a camelCase key",
 		"UpperCamelCaseKey": "an UpperCamelCase key",
 		"a-strange_mixedAndConfused_CaseStyle": "an UpperCamelCase key",
-		"aKeyWithRepeatedCapitalLettersLikeURL": "a key with repeated capitals"
+		"aKeyWithRepeatedCapitalLettersLikeURL": "a key with repeated capitals",
+		"aKeyWithRepeatedCapitalLettersLikeURLButNotAtTheEnd": "a key with repeated capitals"
 	}
 	`
 
@@ -236,23 +237,54 @@ func TestCamelCaseKeys(t *testing.T) {
 		"camelCaseKey": "a camelCase key",
 		"upperCamelCaseKey": "an UpperCamelCase key",
 		"aStrangeMixedAndConfusedCaseStyle": "an UpperCamelCase key",
-		"aKeyWithRepeatedCapitalLettersLikeUrl": "a key with repeated capitals"
+		"aKeyWithRepeatedCapitalLettersLikeURL": "a key with repeated capitals",
+		"aKeyWithRepeatedCapitalLettersLikeURLButNotAtTheEnd": "a key with repeated capitals"
 	}
 	`
 
-	trans := CamelCaseKeys()
+	const lowerRepeatedCapsCamelCaseJSON = `
+	{
+		"title": "Example Title",
+		"description": "whatever",
+		"createdAt": "2015-11-17T20:43:31.0463576-05:00",
+		"updatedAt": "2018-12-24T13:21:15.7883416-07:00",
+		"isActive": true,
+		"imageUrl": "https://example.com/image.png",
+		"timeToLive": 600,
+		"$weirdKey" : "with-colon-spacing-before-value",
+		"plan9Key" : "just an example with a numeral",
+		"__metadataKey": "You see this in OData 2.0",
+		"__metadata": "You see this in OData 2.0",
+		"capitalized": "a capitalized key",
+		"aHyphenatedKey": "a hyphenated key",
+		"camelCaseKey": "a camelCase key",
+		"upperCamelCaseKey": "an UpperCamelCase key",
+		"aStrangeMixedAndConfusedCaseStyle": "an UpperCamelCase key",
+		"aKeyWithRepeatedCapitalLettersLikeUrl": "a key with repeated capitals",
+		"aKeyWithRepeatedCapitalLettersLikeUrlButNotAtTheEnd": "a key with repeated capitals"
+	}
+	`
+
+	camelCaseTrans := CamelCaseKeys(false)
+	lowerRepeatedCapsCamelCaseTrans := CamelCaseKeys(true)
 
 	for _, testCase := range []struct {
-		jsonBytes string
-		direction Direction
+		trans          Transformer
+		inputJSONBytes string
+		direction      Direction
+		expectedOutput string
 	}{
-		{originalJSON, Marshal},
-		{originalJSON, Unmarshal},
-		{camelCaseJSON, Marshal},
-		{camelCaseJSON, Unmarshal},
+		{camelCaseTrans, originalJSON, Marshal, camelCaseJSON},
+		{camelCaseTrans, originalJSON, Unmarshal, camelCaseJSON},
+		{camelCaseTrans, camelCaseJSON, Marshal, camelCaseJSON},
+		{camelCaseTrans, camelCaseJSON, Unmarshal, camelCaseJSON},
+		{lowerRepeatedCapsCamelCaseTrans, originalJSON, Marshal, lowerRepeatedCapsCamelCaseJSON},
+		{lowerRepeatedCapsCamelCaseTrans, originalJSON, Unmarshal, lowerRepeatedCapsCamelCaseJSON},
+		{lowerRepeatedCapsCamelCaseTrans, camelCaseJSON, Marshal, lowerRepeatedCapsCamelCaseJSON},
+		{lowerRepeatedCapsCamelCaseTrans, camelCaseJSON, Unmarshal, lowerRepeatedCapsCamelCaseJSON},
 	} {
-		if output := trans([]byte(testCase.jsonBytes), testCase.direction); string(output) != camelCaseJSON {
-			t.Errorf("%s output of %s doesn't match expected %s", testCase.direction, output, camelCaseJSON)
+		if output := testCase.trans([]byte(testCase.inputJSONBytes), testCase.direction); string(output) != testCase.expectedOutput {
+			t.Errorf("%s output of %s doesn't match expected %s", testCase.direction, output, testCase.expectedOutput)
 		}
 	}
 }
