@@ -66,16 +66,16 @@ func Example() {
 
 func Example_unmarshal() {
 	sampleJSON := `
-	{
-	    "title": "Example Title",
-	    "description": "This is a description.",
-	    "image_url": "https://example.com/image.png",
-	    "referred_by_url": "https://example.com/referrer/index.html",
-	    "is_active": true,
-	    "created_at": "2015-11-17T20:43:31-05:00",
-	    "updated_at": "2018-12-24T13:21:15-07:00"
-	}
-	`
+{
+	"title": "Example Title",
+	"description": "This is a description.",
+	"image_url": "https://example.com/image.png",
+	"referred_by_url": "https://example.com/referrer/index.html",
+	"is_active": true,
+	"created_at": "2015-11-17T20:43:31-05:00",
+	"updated_at": "2018-12-24T13:21:15-07:00"
+}
+`
 
 	var model exampleModel
 
@@ -129,16 +129,16 @@ func ExampleEncoder() {
 
 func ExampleDecoder() {
 	sampleJSON := `
-	{
-	    "$title--": "Example Title",
-	    "$description--": "This is a description.",
-	    "$image_url--": "https://example.com/image.png",
-	    "$referred_by_url--": "https://example.com/referrer/index.html",
-	    "$is_active--": true,
-	    "created_at--": "2015-11-17T20:43:31-05:00",
-	    "updated_at--": "2018-12-24T13:21:15-07:00"
-	}
-	`
+{
+	"$title--": "Example Title",
+	"$description--": "This is a description.",
+	"$image_url--": "https://example.com/image.png",
+	"$referred_by_url--": "https://example.com/referrer/index.html",
+	"$is_active--": true,
+	"created_at--": "2015-11-17T20:43:31-05:00",
+	"updated_at--": "2018-12-24T13:21:15-07:00"
+}
+`
 
 	var model exampleModel
 
