@@ -1,9 +1,12 @@
-// Package conjson provides JSON Encoder and Decoder wrappers, along with
-// Marshaler and Unmarshaler implementations, that allow for the transformation
-// of the JSON data that is used in those mechanisms.
+// Package conjson provides a simple, functional, no-tags-required mechanism to
+// handle and transform JSON representations of values, consistently.
 //
-// The examples may provide more obvious context and reasoning as to why a user
-// would desire these transformations.
+// The types in this package provide JSON Encoder and Decoder wrappers, along
+// with Marshaler and Unmarshaler implementations, that allow for the
+// transformation of the JSON data that is used in those mechanisms.
+//
+// The examples may provide more obvious context and reasoning for the use of
+// these transformations.
 //
 // Copyright © Trevor N. Suarez (Rican7)
 package conjson
