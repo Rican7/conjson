@@ -136,6 +136,19 @@ func CamelCaseKeys(lowerRepeatedCaps bool) Transformer {
 				if lowerRepeatedCaps {
 					// Remove repeated upper-case letters
 					key = repeatedUpperCaseWordBarrierRegex.ReplaceAllFunc(key, func(key []byte) []byte {
+						// If the last letter in the repeated-upper-case find is lower-case,
+						// then we have a successive "word"
+						if unicode.IsLower(rune(key[len(key)-1])) {
+							// Only lower-case the first "word"
+							return append(
+								key[0:1],
+								append(
+									bytes.ToLower(key[1:len(key)-2]),
+									key[len(key)-2:]...,
+								)...,
+							)
+						}
+
 						return append(key[0:1], bytes.ToLower(key[1:])...)
 					})
 				}
