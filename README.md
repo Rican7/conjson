@@ -31,7 +31,7 @@ power and flexibility.
 
 ## Examples
 
-### Marshal
+### Marshal a Go structure into "conventional" style JSON
 
 ```go
 model := exampleModel{
@@ -61,7 +61,7 @@ fmt.Println(string(encoded))
 // }
 ```
 
-### Unmarshal
+### Unmarshal "conventional" style JSON into a Go structure
 
 ```go
 sampleJSON := `
@@ -87,7 +87,7 @@ fmt.Println(model.ReferredByURL)
 // Output: https://example.com/referrer/index.html
 ```
 
-### Encode
+### Encode a Go structure into "camelCase" style JSON
 
 ```go
 model := exampleModel{
@@ -117,7 +117,7 @@ conjson.NewEncoder(jsonEncoder, transform.CamelCaseKeys()).Encode(model)
 // }
 ```
 
-### Decode
+### Decode JSON with atypical keys into a Go structure
 
 ```go
 sampleJSON := `
