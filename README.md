@@ -114,14 +114,14 @@ model := exampleModel{
 jsonEncoder := json.NewEncoder(os.Stdout)
 jsonEncoder.SetIndent(marshalPrefix, marshalIndent)
 
-conjson.NewEncoder(jsonEncoder, transform.CamelCaseKeys()).Encode(model)
+conjson.NewEncoder(jsonEncoder, transform.CamelCaseKeys(false)).Encode(model)
 
 // Output:
 // {
 //     "title": "Example Title",
 //     "description": "This is a description.",
-//     "imageUrl": "https://example.com/image.png",
-//     "referredByUrl": "https://example.com/referrer/index.html",
+//     "imageURL": "https://example.com/image.png",
+//     "referredByURL": "https://example.com/referrer/index.html",
 //     "isActive": true,
 //     "createdAt": "2015-11-17T20:43:31-05:00",
 //     "updatedAt": "2018-12-24T13:21:15-07:00"
