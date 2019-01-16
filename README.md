@@ -56,8 +56,8 @@ fmt.Println(string(encoded))
 //     "image_url": "https://example.com/image.png",
 //     "referred_by_url": "https://example.com/referrer/index.html",
 //     "is_active": true,
-//     "created_at": "2015-11-17T20:43:31.0463576-05:00",
-//     "updated_at": "2018-12-24T13:21:15.7883416-07:00"
+//     "created_at": "2015-11-17T20:43:31-05:00",
+//     "updated_at": "2018-12-24T13:21:15-07:00"
 // }
 ```
 
@@ -71,8 +71,8 @@ sampleJSON := `
 	"image_url": "https://example.com/image.png",
 	"referred_by_url": "https://example.com/referrer/index.html",
 	"is_active": true,
-	"created_at": "2015-11-17T20:43:31.0463576-05:00",
-	"updated_at": "2018-12-24T13:21:15.7883416-07:00"
+	"created_at": "2015-11-17T20:43:31-05:00",
+	"updated_at": "2018-12-24T13:21:15-07:00"
 }
 `
 
@@ -83,8 +83,19 @@ json.Unmarshal(
 	conjson.NewUnmarshaler(&model, transform.ConventionalKeys()),
 )
 
-fmt.Println(model.ReferredByURL)
-// Output: https://example.com/referrer/index.html
+// Print the "raw" model JSON to show result
+rawJSON, _ := json.MarshalIndent(model, marshalPrefix, marshalIndent)
+fmt.Println(string(rawJSON))
+// Output:
+// {
+//     "Title": "Example Title",
+//     "Description": "This is a description.",
+//     "ImageURL": "https://example.com/image.png",
+//     "ReferredByURL": "https://example.com/referrer/index.html",
+//     "IsActive": true,
+//     "CreatedAt": "2015-11-17T20:43:31-05:00",
+//     "UpdatedAt": "2018-12-24T13:21:15-07:00"
+// }
 ```
 
 ### Encode a Go structure into "camelCase" style JSON
@@ -112,8 +123,8 @@ conjson.NewEncoder(jsonEncoder, transform.CamelCaseKeys()).Encode(model)
 //     "imageUrl": "https://example.com/image.png",
 //     "referredByUrl": "https://example.com/referrer/index.html",
 //     "isActive": true,
-//     "createdAt": "2015-11-17T20:43:31.0463576-05:00",
-//     "updatedAt": "2018-12-24T13:21:15.7883416-07:00"
+//     "createdAt": "2015-11-17T20:43:31-05:00",
+//     "updatedAt": "2018-12-24T13:21:15-07:00"
 // }
 ```
 
@@ -127,8 +138,8 @@ sampleJSON := `
 	"$image_url--": "https://example.com/image.png",
 	"$referred_by_url--": "https://example.com/referrer/index.html",
 	"$is_active--": true,
-	"$created_at--": "2015-11-17T20:43:31.0463576-05:00",
-	"updated_at--": "2018-12-24T13:21:15.7883416-07:00"
+	"created_at--": "2015-11-17T20:43:31-05:00",
+	"updated_at--": "2018-12-24T13:21:15-07:00"
 }
 `
 
@@ -142,11 +153,17 @@ decoder := conjson.NewDecoder(
 
 decoder.Decode(&model)
 
-fmt.Println(model.Title)
-fmt.Println(model.Description)
-fmt.Println(model.ImageURL)
+// Print the "raw" model JSON to show result
+rawJSON, _ := json.MarshalIndent(model, marshalPrefix, marshalIndent)
+fmt.Println(string(rawJSON))
 // Output:
-// Example Title
-// This is a description.
-// https://example.com/image.png
+// {
+//     "Title": "Example Title",
+//     "Description": "This is a description.",
+//     "ImageURL": "https://example.com/image.png",
+//     "ReferredByURL": "https://example.com/referrer/index.html",
+//     "IsActive": true,
+//     "CreatedAt": "2015-11-17T20:43:31-05:00",
+//     "UpdatedAt": "2018-12-24T13:21:15-07:00"
+// }
 ```
