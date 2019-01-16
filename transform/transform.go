@@ -118,7 +118,11 @@ func ConventionalKeys() Transformer {
 
 // CamelCaseKeys returns a Transformer that converts every JSON "key" (or JSON
 // object "name") in the transformed data set to be in `camelCase` style.
-func CamelCaseKeys() Transformer {
+//
+// If the passed lowerRepeatedCaps param is `true`, then repeated capital
+// letters (such as "URL" or "HTTP") will be converted to typical "Title" case
+// (such as "Url" or "Http").
+func CamelCaseKeys(lowerRepeatedCaps bool) Transformer {
 	return func(data []byte, direction Direction) []byte {
 		return replaceKeys(
 			data,
@@ -129,10 +133,12 @@ func CamelCaseKeys() Transformer {
 				// Transform snake-case keys to camel-case keys
 				key = snakeCaseToCamelCaseWordBarrier(key)
 
-				// Remove repeated upper-case letters
-				key = repeatedUpperCaseWordBarrierRegex.ReplaceAllFunc(key, func(key []byte) []byte {
-					return append(key[0:1], bytes.ToLower(key[1:])...)
-				})
+				if lowerRepeatedCaps {
+					// Remove repeated upper-case letters
+					key = repeatedUpperCaseWordBarrierRegex.ReplaceAllFunc(key, func(key []byte) []byte {
+						return append(key[0:1], bytes.ToLower(key[1:])...)
+					})
+				}
 
 				// Lower-case the first letter
 				return append(bytes.ToLower(key[0:1]), key[1:]...)
