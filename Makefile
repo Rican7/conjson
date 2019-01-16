@@ -46,7 +46,9 @@ test-with-coverage:
 	go test -cover ./...
 
 test-with-coverage-json-output:
-	go test -cover -json ./...
+# Don't show output and ignore errors, so that we can pipe the output
+# Always exit with status code `0` (success)
+	-@go test -cover -json ./... ; exit 0
 
 test-with-coverage-profile ${GO_TEST_COVERAGE_FILE_NAME}:
 	@mkdir -p "$$(dirname "${GO_TEST_COVERAGE_FILE_NAME}")"
